@@ -30,7 +30,7 @@ class RoomClientRepository {
   Transport _sendTransport;
   Transport _recvTransport;
   bool _produce = false;
-  bool _consume = true;
+  bool _consume = false;
   StreamSubscription<MediaDevicesState> _mediaDevicesBlocSubscription;
   String audioInputDeviceId;
   String audioOutputDeviceId;
@@ -384,7 +384,7 @@ class RoomClientRepository {
 
       if (_produce) {
         enableMic();
-        enableWebcam();
+        // enableWebcam();
 
         _sendTransport.on('connectionstatechange', (connectionState) {
           if (connectionState == 'connected') {
@@ -437,6 +437,7 @@ class RoomClientRepository {
             try {
               _recvTransport.consume(
                 id: request['data']['id'],
+                peerId: request['data']['peerId'],
                 producerId: request['data']['producerId'],
                 kind: RTCRtpMediaTypeExtension.fromString(
                     request['data']['kind']),

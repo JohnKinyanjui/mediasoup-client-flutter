@@ -5,8 +5,8 @@ import 'package:mediasoup_client_flutter/src/SctpParameters.dart';
 import 'package:mediasoup_client_flutter/src/Transport.dart';
 import 'package:mediasoup_client_flutter/src/common/EnhancedEventEmitter.dart';
 import 'package:mediasoup_client_flutter/src/RtpParameters.dart';
-import 'package:mediasoup_client_flutter/src/handlers/Browser.dart';
-import 'package:mediasoup_client_flutter/src/handlers/Native.dart';
+import 'package:mediasoup_client_flutter/src/handlers/handler_unified_plan.dart';
+import 'package:mediasoup_client_flutter/src/handlers/handler_plan_b.dart';
 
 class SCTP_NUM_STREAMS {
   static const int OS = 1024;
@@ -19,7 +19,8 @@ class RTCOAuthCredential {
 }
 
 enum RTCIceCredentialType {
-  oauth, password,
+  oauth,
+  password,
 }
 
 extension RTCIceCredentialTypeToString on RTCIceCredentialType {
@@ -38,7 +39,8 @@ extension RTCIceCredentialTypeToString on RTCIceCredentialType {
 }
 
 enum RTCIceTransportPolicy {
-  all, relay,
+  all,
+  relay,
 }
 
 extension RTCIceTransportPolicyToString on RTCIceTransportPolicy {
@@ -63,18 +65,19 @@ class RTCIceServer {
   List<String> urls;
   String username;
 
-  RTCIceServer({this.credential, this.credentialType, this.urls, this.username,});
+  RTCIceServer({
+    this.credential,
+    this.credentialType,
+    this.urls,
+    this.username,
+  });
 
   Map<String, dynamic> toMap() {
     return {
-      if (credential != null)
-        'credential': credential,
-      if (credentialType != null)
-      'credentialType': credentialType.value,
-      if (urls != null)
-      'urls': urls,
-      if (username != null)
-      'username': username,
+      if (credential != null) 'credential': credential,
+      if (credentialType != null) 'credentialType': credentialType.value,
+      if (urls != null) 'urls': urls,
+      if (username != null) 'username': username,
     };
   }
 }
@@ -110,7 +113,11 @@ class HandlerSendResult {
   RtpParameters rtpParameters;
   RTCRtpSender rtpSender;
 
-  HandlerSendResult({this.localId, this.rtpParameters, this.rtpSender,});
+  HandlerSendResult({
+    this.localId,
+    this.rtpParameters,
+    this.rtpSender,
+  });
 }
 
 class HandlerSendOptions {
@@ -133,7 +140,10 @@ class HandlerSendDataChannelResult {
   RTCDataChannel dataChannel;
   SctpStreamParameters sctpStreamParameters;
 
-  HandlerSendDataChannelResult({this.dataChannel, this.sctpStreamParameters,});
+  HandlerSendDataChannelResult({
+    this.dataChannel,
+    this.sctpStreamParameters,
+  });
 }
 
 class HandlerReceiveResult {
@@ -205,12 +215,13 @@ abstract class HandlerInterface extends EnhancedEventEmitter {
   HandlerInterface() : super();
 
   static HandlerInterface handlerFactory() {
-    if (kIsWeb) {
-      return Browser();
-    } else {
-      return Native();
-    }
+    // if (kIsWeb) {
+    return HandlerUnifiedPlan();
+    // } else {
+    // return Native();
+    // }
   }
+
   ///@emits @connect - (
   ///    { dtlsParameters: DtlsParameters },
   ///    callback: Function,
@@ -231,9 +242,11 @@ abstract class HandlerInterface extends EnhancedEventEmitter {
   Future<void> stopSending(String localId);
   Future<void> replaceTrack(ReplaceTrackOptions options);
   Future<void> setMaxSpatialLayer(SetMaxSpatialLayerOptions options);
-  Future<void> setRtpEncodingParameters(SetRtpEncodingParametersOptions options);
+  Future<void> setRtpEncodingParameters(
+      SetRtpEncodingParametersOptions options);
   Future<List<StatsReport>> getSenderStats(String localId);
-  Future<HandlerSendDataChannelResult> sendDataChannel(SctpStreamParameters options);
+  Future<HandlerSendDataChannelResult> sendDataChannel(
+      SctpStreamParameters options);
   Future<HandlerReceiveResult> receive(HandlerReceiveOptions options);
   Future<void> stopReceiving(
     String localId,

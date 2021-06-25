@@ -15,7 +15,7 @@ import 'package:mediasoup_client_flutter/src/utils.dart';
 
 Logger _logger = Logger('Native');
 
-class Native extends HandlerInterface {
+class HandlerPlanB extends HandlerInterface {
   // Handler direction.
   Direction _direction;
   // Remote SDP handler.
@@ -44,7 +44,7 @@ class Native extends HandlerInterface {
   // Got transport local and remote parameters.
   bool _transportReady = false;
 
-  Native() : super();
+  HandlerPlanB() : super();
 
   void _assertSendRirection() {
     if (_direction != Direction.send) {
@@ -598,7 +598,7 @@ class Native extends HandlerInterface {
     //   return false;
     // });
 
-    RTCRtpSender sender = (await _pc.getSenders()).firstWhere((e) => e.senderId == track.id);
+    RTCRtpSender sender = (await _pc.getSenders()).firstWhere((e) => e.senderId == track.id, orElse: () => null);
     await _pc.removeTrack(sender);
     // await _pc.removeStream(sendStream);
     // await _sendStream.removeTrack(track);

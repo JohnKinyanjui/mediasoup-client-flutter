@@ -58,6 +58,7 @@ class ProduceArguments {
 
 class ConsumeArguments {
   final String id;
+  final String peerId;
   final String producerId;
   final RTCRtpMediaType kind;
   final RtpParameters rtpParameters;
@@ -66,6 +67,7 @@ class ConsumeArguments {
 
   const ConsumeArguments({
     this.id,
+    this.peerId,
     this.producerId,
     this.kind,
     this.rtpParameters,
@@ -983,6 +985,7 @@ class Transport extends EnhancedEventEmitter {
 
     Consumer consumer = Consumer(
       id: id,
+      peerId: arguments.peerId,
       localId: receiveResult.localId,
       producerId: arguments.producerId,
       rtpParameters: arguments.rtpParameters,
@@ -1029,6 +1032,7 @@ class Transport extends EnhancedEventEmitter {
   /// use consumerCallback to receive a new Consumer.
   void consume({
     String id,
+    String peerId,
     String producerId,
     RTCRtpMediaType kind,
     RtpParameters rtpParameters,
@@ -1054,6 +1058,16 @@ class Transport extends EnhancedEventEmitter {
       throw ('no "connect" listener set into this transport');
     }
 
+    // _consume(ConsumeArguments(
+    //   id: id,
+    //   peerId: peerId,
+    //   producerId: producerId,
+    //   kind: kind,
+    //   rtpParameters: rtpParameters,
+    //   appData: appData,
+    //   accept: accept,
+    // ));
+
     _flexQueue.addTask(
       FlexTaskAdd(
         id: id,
@@ -1061,6 +1075,7 @@ class Transport extends EnhancedEventEmitter {
         execFun: _consume,
         argument: ConsumeArguments(
           id: id,
+          peerId: peerId,
           producerId: producerId,
           kind: kind,
           rtpParameters: rtpParameters,

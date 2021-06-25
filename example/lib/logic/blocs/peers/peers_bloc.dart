@@ -49,9 +49,9 @@ class PeersBloc extends Bloc<dynamic, PeersState> {
 
   Stream<PeersState> _mapConsumerAddToState(ConsumerAdd event) async* {
     final Map<String, Peer> newPeers = Map<String, Peer>.of(state.peers);
-    newPeers[event.consumer.appData['peerId']] =
-        Peer.copy(newPeers[event.consumer.appData['peerId']]);
-    newPeers[event.consumer.appData['peerId']].consumers.add(event.consumer.id);
+    newPeers[event.consumer.peerId] =
+        Peer.copy(newPeers[event.consumer.peerId]);
+    newPeers[event.consumer.peerId].consumers.add(event.consumer.id);
 
     yield PeersState(peers: newPeers);
   }

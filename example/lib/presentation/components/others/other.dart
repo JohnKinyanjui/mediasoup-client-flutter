@@ -14,8 +14,8 @@ class Other extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 250,
-      width: 300,
+      width: 320,
+      height: 240,
       color: Colors.black87,
       child: Stack(
         fit: StackFit.expand,
@@ -24,8 +24,6 @@ class Other extends StatelessWidget {
             RTCVideoView(renderer)
           else
             Container(
-              height: 250,
-              width: 300,
               decoration: BoxDecoration(color: Colors.black54),
             ),
           Positioned(
